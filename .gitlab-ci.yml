@@ -1,0 +1,30 @@
+variables:
+  DOCKER_HOST: "unix:///var/run/docker.sock"
+  GIT_SUBMODULE_STRATEGY: recursive
+  DATABASE_URL: ""
+  KAFKA_URL_BROKER: "172.17.0.1:13100"
+  PORT: "3030"
+
+
+
+stages:
+  - build
+  - deploy
+
+# Этап сборки Docker-образа
+build_docker_image:
+  stage: build
+  script:
+    - docker build -t justnote-image .
+  only:
+    - main
+
+# Этап развертывания контейнера
+deploy:
+  stage: deploy
+  script:
+    - docker stop justnote || true
+    - docker rm justnote || true
+    - docker run -d --name justnote -p 9801:3030 -e PORT=$PORT -e DATABASE_URL=$DATABASE_URL -e KAFKA_URL_BROKER=$KAFKA_URL_BROKER -e SEC_KEY="key" justnote-image 
+  only:
+    - main
