@@ -6,12 +6,11 @@ import { NoteModule } from './note/note.module';
 import { KafkaController } from './kafka/kafka.controller';
 import { KafkaService } from './kafka/kafka.service';
 import { KafkaModule } from './kafka/kafka.module';
-import { NotificationSchedulerService } from './ScheduleModule/notification-scheduler.service';
-import { ScheduleModule } from '@nestjs/schedule';
+
 
 @Module({
-  imports: [ScheduleModule.forRoot(), NoteModule, KafkaModule],
+  imports: [ NoteModule, KafkaModule],
   controllers: [NoteController, KafkaController],
-  providers: [PrismaService, NoteService, KafkaService, NotificationSchedulerService],
+  providers: [PrismaService, NoteService, KafkaService, ],
 })
 export class AppModule {}
